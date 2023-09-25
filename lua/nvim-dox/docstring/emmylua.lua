@@ -1,0 +1,2 @@
+-- emmy lua is embedded in the lua language server 
+-- so i'll left this blank lol

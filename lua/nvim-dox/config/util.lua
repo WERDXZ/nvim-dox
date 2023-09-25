@@ -1,0 +1,72 @@
+local config = require("nvim-dox.config")
+
+local M = {}
+
+---get the avaliable engine for the current buffer 
+---@param bufrn number
+---@return nvim_dox.config.source|nil
+M.get_avaliable_engine = function (bufrn)
+	local ft = vim.api.nvim_buf_get_option(bufrn, "filetype")
+	for _, value in pairs(config.engines) do
+		for _, v in pairs(value.ft) do
+			if v == ft then
+				return value
+			end
+		end
+	end
+	return nil
+end
+
+---get the output of the start location
+---@param bufrn number
+---@param type nvim_dox.type
+---@param location nvim_dox.location|nil
+---@param node TSNode | nil
+---@return number, number
+M.get_output_start_loc = function (bufrn, type, location, node)
+	local loc = location or config.default_locations[type]
+	if loc == "top" then
+		return 0, 0
+	elseif loc == "bottom" then
+		return vim.api.nvim_buf_line_count(bufrn), 0
+	elseif loc == "above" then
+		if node then
+			return node:range()[1] - 1, 0
+		end
+	elseif loc == "below" then
+		if node then
+			return node:range()[2], 0
+		end
+	elseif loc == "after" then
+		if node then
+			-- its after the line, eg: `int a; //< @brief test var`
+			return node:range()[2] - 1, vim.fn.col('$') - 1
+		end
+	end
+
+	return 0, 0
+end
+
+---get the snippet functions
+---@class nvim_dox.snippet_functions
+---@field parse any
+---@field expand any
+---@field snippet any
+---
+---@return nvim_dox.snippet_functions|nil
+M.get_snippets_functions = function ()
+	local snippet_engine = config.snippet_engine
+	if snippet_engine == nil then
+		return nil
+	end
+	-- only support luasnip for now
+	-- TODO: support other snippet engine
+	return {
+		parse = require(snippet_engine).parser.parse_snippet,
+		expand = require(snippet_engine).snip_expand,
+		snippet = require(snippet_engine).snippet
+	}
+end
+
+
+return M

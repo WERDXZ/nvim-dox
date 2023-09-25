@@ -7,13 +7,14 @@ local M = {}
 ---generate the correct docstring
 ---@param type nvim_dox.type
 ---@param node TSNode | nil
+---@param bufrn number
 ---@return boolean
-M.generate = function(type, node)
-	local generator = util.get_avaliable_engine(0)
+M.generate = function(type, node, bufrn)
+	local generator = util.get_avaliable_engine(bufrn)
 	if generator == nil then
 		return false
 	end
-	local row, col = util.get_output_start_loc(0, type, generator.location[type], node)
+	local row, col = util.get_output_start_loc(bufrn, type, generator.location[type], node)
 
 	local docstring = { "" }
 	if generator.style == "line" then

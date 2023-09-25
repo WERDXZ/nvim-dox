@@ -3,10 +3,10 @@ local config = require("nvim-dox.config")
 local M = {}
 
 ---get the avaliable engine for the current buffer 
----@param bufrn number
+---@param bufnr number
 ---@return nvim_dox.config.source|nil
-M.get_avaliable_engine = function (bufrn)
-	local ft = vim.api.nvim_buf_get_option(bufrn, "filetype")
+M.get_avaliable_engine = function (bufnr)
+	local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
 	for _, value in pairs(config.engines) do
 		for _, v in pairs(value.ft) do
 			if v == ft then
@@ -18,17 +18,17 @@ M.get_avaliable_engine = function (bufrn)
 end
 
 ---get the output of the start location
----@param bufrn number
+---@param bufnr number
 ---@param type nvim_dox.type
 ---@param location nvim_dox.location|nil
 ---@param node TSNode | nil
 ---@return number, number
-M.get_output_start_loc = function (bufrn, type, location, node)
+M.get_output_start_loc = function (bufnr, type, location, node)
 	local loc = location or config.default_locations[type]
 	if loc == "top" then
 		return 0, 0
 	elseif loc == "bottom" then
-		return vim.api.nvim_buf_line_count(bufrn), 0
+		return vim.api.nvim_buf_line_count(bufnr), 0
 	elseif loc == "above" then
 		if node then
 			return node:range()[1] - 1, 0

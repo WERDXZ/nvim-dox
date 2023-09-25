@@ -9,7 +9,7 @@ local M = {}
 -- for a given range(probably the whole file)
 -- the first match is used and passed on to the parser
 --
----@alias nvim_dox.querier fun(bufrn: number|nil):nil|TSNode
+---@alias nvim_dox.querier fun(bufnr: number|nil):nil|TSNode|boolean
 ---@alias nvim_dox.querier_table table<nvim_dox.type, nvim_dox.querier>
 
 ---@type nvim_dox.querier_table

@@ -18,6 +18,7 @@ local license = require("nvim-dox.util.license")
 ---
 ---@class nvim_dox.config
 ---@field engines nvim_dox.config.source[]
+---@field max_iter integer
 ---@field register_keywords boolean
 ---@field short_license boolean
 ---@field snippet_engine string|nil
@@ -29,6 +30,7 @@ local M = {
 	engines = {
 		doxygen = require("nvim-dox.config.doxygen"),
 	},
+	max_iter = 3, -- max iteration for the query
 	register_keywords = true, -- register keywords to cmp 
 	short_license = true, -- it will output something like `This project is released under the ${LICENSE}.`
 	snippet_engine = "luasnip",

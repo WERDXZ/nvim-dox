@@ -11,8 +11,8 @@ local M = {}
 
 local querier = require("nvim-dox.querier")
 local create_cmd = vim.api.nvim_create_user_command
-local type = require("nvim-dox.type")
-local completion = vim.list_extend({ "generate" }, type.types)
+local node_type = require("nvim-dox.type")
+local completion = vim.list_extend({ "generate" }, node_type.types)
 local generate = require("nvim-dox.docstring").generate
 
 M.setup = function()
@@ -37,42 +37,47 @@ M.setup = function()
 end
 
 ---call each queriers
----@param bufrn number
+---@param bufnr number
 ---@return boolean
-M.call_querier_each = function(bufrn)
-	---@type nil | TSNode
+M.call_querier_each = function(bufnr)
+	---@type nil | TSNode | boolean
 	local result = nil
 	---@type nvim_dox.type|nil
 	local index = nil
 
 	for _index, _value in pairs(querier.queriers) do
-		result = _value(bufrn)
+		result = _value(bufnr)
 		index = _index
 		if result ~= nil then
 			break
 		end
 	end
 
-	-- there are two ways to implement, one is to call the top generator to do all the work
-	-- or call every function here
+	if result == true then
+		result = nil
+	end
 
-	return generate(index, result, bufrn) == false
+	return generate(index, result, bufnr)
 end
 
 ---call a specifc querier
 ---@param _type nvim_dox.type
----@param bufrn number
+---@param bufnr number
 ---@return boolean
-M.call_querier = function(_type, bufrn)
+M.call_querier = function(_type, bufnr)
 	if querier.queriers == nil then
 		return false
 	end
-	local node = querier.queriers[_type](bufrn)
+	local node = querier.queriers[_type](bufnr)
 	if node == nil or node == false then
 		return false
 	end
 
-	return generate(_type, node, bufrn) == false
+	if type(node) == "boolean" then
+		node = nil
+	end
+
+	return generate(_type, node, bufnr)
 end
 
 return M

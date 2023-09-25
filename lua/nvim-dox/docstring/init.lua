@@ -1,20 +1,23 @@
+local user_config = require("nvim-dox.config").user_field
 local util = require("nvim-dox.config.util")
 local parser = require("nvim-dox.parser")
-local user_config = require("nvim-dox.config").user_field
 
 local M = {}
 
 ---generate the correct docstring
 ---@param type nvim_dox.type
 ---@param node TSNode | nil
----@param bufrn number
+---@param bufnr number
 ---@return boolean
-M.generate = function(type, node, bufrn)
-	local generator = util.get_avaliable_engine(bufrn)
+M.generate = function(type, node, bufnr)
+	local generator = util.get_avaliable_engine(bufnr)
 	if generator == nil then
 		return false
 	end
-	local row, col = util.get_output_start_loc(bufrn, type, generator.location[type], node)
+	if generator.docstring[type] == nil then
+		return false
+	end
+	local row, col = util.get_output_start_loc(bufnr, type, generator.location[type], node)
 
 	local docstring = { "" }
 	if generator.style == "line" then
@@ -27,32 +30,58 @@ M.generate = function(type, node, bufrn)
 	return M.docstring_output(docstring, row, col)
 end
 
----@alias generator_function fun(type: nvim_dox.type, node: TSNode | nil | boolean, style: nvim_dox.config.style_config, template: nvim_dox.docstring.template): string[]
+---@alias generator_function fun(node_type: nvim_dox.type, node: TSNode | nil | boolean, style: nvim_dox.config.style_config, template: nvim_dox.docstring.template): string[]
+---all these functions are used to generate the docstring which is strings in a list
 
 ---@type generator_function
 ---generate the docstring by line comment
----@param type nvim_dox.type
+---@param node_type nvim_dox.type
 ---@param node TSNode|nil
 ---@param style nvim_dox.config.style_config
 ---@param template nvim_dox.docstring.template
----@return string[]
-M.generate_line = function(type, node, style, template)
+---@return string[] 
+M.generate_line = function(node_type, node, style, template)
 	local docstring = {}
+	local parsers = vim.deepcopy(parser.parsers[node_type])
+	for key, value in pairs(user_config) do
+		parsers[key] = value
+	end
+	print(vim.inspect(parsers))
+
 	for _, line in pairs(template) do
 		local _line = style.comment_line
 		if line.keyword then
 			_line = _line .. style.keyword_prefix .. line.keyword .. " "
 		end
 		_line = _line .. line.value
+
+		-- Check if there is a special parser for the current line
+		local parsedValue = nil
 		if line[1] then
-			_line = string.format(
-				_line,
-				parser.parsers[type][line[1]] and parser.parsers[type][line[1]](node)
-					or user_config[line[1]] and user_config[line[1]]()
-					or ""
-			)
+			local parserItem = parsers[line[1]]
+			if type(parserItem) == "function" then
+				parsedValue = parserItem(node)
+				if parsedValue == nil then goto continue end
+			else
+				parsedValue = parserItem
+			end
+
+			-- Default to empty string if neither parser nor user_config has the value
+			if not parsedValue then
+				parsedValue = ""
+			end
 		end
-		table.insert(docstring, _line)
+
+		-- Check if the parsed value is a table and handle it
+		if type(parsedValue) == "table" then
+			for _, value in pairs(parsedValue) do
+				table.insert(docstring, string.format(_line, value))
+			end
+		else
+			table.insert(docstring, string.format(_line, parsedValue))
+		end
+
+		::continue::
 	end
 
 	return docstring
@@ -60,13 +89,13 @@ end
 
 ---@type generator_function
 ---generate the docstring by block comment
----@param type nvim_dox.type
+---@param node_type nvim_dox.type
 ---@param node TSNode|nil
 ---@param style nvim_dox.config.style_config
 ---@param template nvim_dox.docstring.template
 ---@return string[]
-M.generate_block = function(type, node, style, template)
-	local docstring = M.generate_line(type, node, style, template)
+M.generate_block = function(node_type, node, style, template)
+	local docstring = M.generate_line(node_type, node, style, template)
 	table.insert(docstring, 1, style.comment_head)
 	table.insert(docstring, style.comment_tail)
 	return docstring
@@ -74,13 +103,13 @@ end
 
 ---@type generator_function
 ---generate the docstring by banner comment
----@param type nvim_dox.type
+---@param node_type nvim_dox.type
 ---@param node TSNode|nil
 ---@param style nvim_dox.config.style_config
 ---@param template nvim_dox.docstring.template
 ---@return string[]
-M.generate_banner = function(type, node, style, template)
-	local docstring = M.generate_block(type, node, style, template)
+M.generate_banner = function(node_type, node, style, template)
+	local docstring = M.generate_block(node_type, node, style, template)
 	table.insert(docstring, 1, style.comment_prefix)
 	table.insert(docstring, style.comment_suffix)
 	return docstring
@@ -104,15 +133,10 @@ M.docstring_output = function(docstring, row, col)
 		count = count + 1
 		return "${" .. count .. ":" .. matched .. "}"
 	end) .. "\n"
-	print(_docstring)
-
 
 	--TODO: a wierd bug when outputing, it automatically add a new line
 	snippet_engine.expand(
-		snippet_engine.snippet(
-			"",
-			snippet_engine.parse(nil, _docstring, { trim_empty = false, dedent = false })
-		),
+		snippet_engine.snippet("", snippet_engine.parse(nil, _docstring, { trim_empty = false, dedent = false })),
 		{ pos = { row, col } }
 	)
 	return true

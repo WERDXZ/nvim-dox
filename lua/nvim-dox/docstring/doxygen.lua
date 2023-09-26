@@ -13,6 +13,14 @@ local M = {
 		{ "tparams", keyword = "tparam", value = "%s", newline=true},
 		{ "return", keyword = "return", value = "%s", newline=true},
 	},
+	["class"] = {
+		{"name", keyword="brief", value = "The %s class.", newline=true},
+		{"tparams", keyword="tparam", value = "%s", newline=true},
+	},
+	["struct"] = {
+		{"name", keyword="brief", value = "The %s struct.", newline=true},
+		{"tparams", keyword="tparam", value = "%s", newline=true},
+	}
 }
 
 return M

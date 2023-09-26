@@ -53,6 +53,8 @@ local M = {
 	default_locations = {
 		["file"] = "top",
 		["function"] = "above",
+		["class"] = "above",
+		["struct"] = "above",
 	},
 
 }

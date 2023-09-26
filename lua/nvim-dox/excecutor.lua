@@ -23,8 +23,11 @@ M.setup = function()
 			return
 		elseif params[1] == "generate" then
 			return
+		elseif params[1] == "." then
+			M.call_querier_each(0)
+			return
 		else
-			M.call_querier(params[1],0)
+			M.call_querier(params[1], 0)
 			return
 		end
 	end, {
@@ -37,6 +40,7 @@ M.setup = function()
 end
 
 ---call each queriers
+---its seems that it is because calling queriers multiple times
 ---@param bufnr number
 ---@return boolean
 M.call_querier_each = function(bufnr)
@@ -51,6 +55,10 @@ M.call_querier_each = function(bufnr)
 		if result ~= nil then
 			break
 		end
+	end
+
+	if result == nil then
+		return false
 	end
 
 	if result == true then

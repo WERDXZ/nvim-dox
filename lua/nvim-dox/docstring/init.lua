@@ -139,8 +139,9 @@ M.docstring_output = function(docstring, row, col, bufnr)
 	local _docstring = table.concat(docstring, "\n"):gsub("%${(.-)}", function(matched)
 		count = count + 1
 		return "${" .. count .. ":" .. matched .. "}"
-	end) .. "\n"
+	end)
 
+	vim.fn.append(row,"")
 	--TODO: a wierd bug when outputing, it automatically add a new line
 	snippet_engine.expand(
 		snippet_engine.snippet("", snippet_engine.parse(nil, _docstring, { trim_empty = false, dedent = false })),

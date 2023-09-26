@@ -18,11 +18,9 @@ local builtin = {
 				node = node:named_child(1)
 			end
 
-			local return_node = node and get_named_child(node, { "type_identifier", "primitive_type" }) or nil
-			if return_node then
-				return vim.treesitter.get_node_text(return_node, bufnr)
-			end
-			return nil
+			local return_node = node and get_named_child(node, { "type_identifier", "primitive_type", "placeholder_type_specifier" }) or nil
+			print(return_node and return_node:type())
+			return return_node and vim.treesitter.get_node_text(return_node, bufnr)
 		end,
 		["params"] = function(node, bufnr)
 			if node and node:type() == "template_declaration" then

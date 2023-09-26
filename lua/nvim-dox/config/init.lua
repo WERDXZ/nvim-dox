@@ -30,7 +30,7 @@ local M = {
 	engines = {
 		doxygen = require("nvim-dox.config.doxygen"),
 	},
-	max_iter = 3, -- max iteration for the query
+	max_iter = 5, -- max iteration for the query
 	register_keywords = true, -- register keywords to cmp 
 	short_license = true, -- it will output something like `This project is released under the ${LICENSE}.`
 	snippet_engine = "luasnip",
@@ -52,6 +52,7 @@ local M = {
 	},
 	default_locations = {
 		["file"] = "top",
+		["function"] = "above",
 	},
 
 }

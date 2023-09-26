@@ -2,10 +2,10 @@ local config = require("nvim-dox.config")
 
 local M = {}
 
----get the avaliable engine for the current buffer 
+---get the avaliable engine for the current buffer
 ---@param bufnr number
 ---@return nvim_dox.config.source|nil
-M.get_avaliable_engine = function (bufnr)
+M.get_avaliable_engine = function(bufnr)
 	local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
 	for _, value in pairs(config.engines) do
 		for _, v in pairs(value.ft) do
@@ -23,25 +23,22 @@ end
 ---@param location nvim_dox.location|nil
 ---@param node TSNode | nil
 ---@return number, number
-M.get_output_start_loc = function (bufnr, type, location, node)
+M.get_output_start_loc = function(bufnr, type, location, node)
 	local loc = location or config.default_locations[type]
+	local row, col = 0, 0
+	if node then
+		row, col = node:range()
+	end
 	if loc == "top" then
 		return 0, 0
 	elseif loc == "bottom" then
 		return vim.api.nvim_buf_line_count(bufnr), 0
 	elseif loc == "above" then
-		if node then
-			return node:range()[1] - 1, 0
-		end
+		return row, 0
 	elseif loc == "below" then
-		if node then
-			return node:range()[2], 0
-		end
+		return row + 1, 0
 	elseif loc == "after" then
-		if node then
-			-- its after the line, eg: `int a; //< @brief test var`
-			return node:range()[2] - 1, vim.fn.col('$') - 1
-		end
+		return row, vim.fn.col("$") - 1
 	end
 
 	return 0, 0
@@ -54,7 +51,7 @@ end
 ---@field snippet any
 ---
 ---@return nvim_dox.snippet_functions|nil
-M.get_snippets_functions = function ()
+M.get_snippets_functions = function()
 	local snippet_engine = config.snippet_engine
 	if snippet_engine == nil then
 		return nil
@@ -64,9 +61,8 @@ M.get_snippets_functions = function ()
 	return {
 		parse = require(snippet_engine).parser.parse_snippet,
 		expand = require(snippet_engine).snip_expand,
-		snippet = require(snippet_engine).snippet
+		snippet = require(snippet_engine).snippet,
 	}
 end
-
 
 return M

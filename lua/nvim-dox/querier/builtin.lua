@@ -7,6 +7,7 @@ local builtin = {
 		-- if the cursor is at first line
 		if vim.fn.line(".") == 1 then
 			-- just get the node at cursor
+			print("true yield")
 			return true
 		end
 		return nil
@@ -16,13 +17,14 @@ local builtin = {
 		local func = {"function_definition","template_declaration"}
 		local node = get_named_parent(vim.treesitter.get_node({bufnr=bufnr}), func)
 
-		if node and node:type() == "template_declaration" then
-			node = node:named_child(1)
+		print(node and node:parent():type())
+		print("seperator")
+
+		if node and node:parent() and node:parent():type() == "template_declaration" then
+			print("template_declaration")
+			node = node:parent()
 		end
 
-		-- debug
-		print(vim.inspect(node and --[[ node:named_child(0):type() ]]vim.treesitter.get_node_text(node:named_child(0),bufnr or 0)))
-		--
 		return node
 	end
 }

@@ -3,13 +3,14 @@ local M = {}
 ---return the parent node with the first matching name
 ---@param node TSNode|nil
 ---@param names string[]
-M.get_named_parent = function(node, names)
-	local max_iter = require("nvim-dox.config").max_iter
+---@param max_iter integer|nil
+M.get_named_parent = function(node, names, max_iter)
+	local _max_iter = max_iter or require("nvim-dox.config").max_iter
 	local iter = 0
 	if node == nil then
 		return nil
 	end
-	while iter < max_iter do
+	while iter < _max_iter do
 		for _, name in ipairs(names) do
 			if node:type() == name then
 				return node
@@ -21,6 +22,22 @@ M.get_named_parent = function(node, names)
 			return nil
 		end
 	end
+end
+
+---get the first child node with the matching name 
+---@param node TSNode
+---@param names string[]
+---@return unknown
+M.get_named_child = function(node, names)
+	for i = 0, node:named_child_count() - 1 do
+		local child = node:named_child(i)
+		for _, name in ipairs(names) do
+			if child and  child:type() == name then
+				return child
+			end
+		end
+	end
+	return nil
 end
 
 return M

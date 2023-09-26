@@ -47,7 +47,6 @@ M.generate_line = function(node_type, node, style, template, bufnr)
 	for key, value in pairs(user_config) do
 		parsers[key] = value
 	end
-	print(vim.inspect(parsers))
 
 	for _, line in pairs(template) do
 		local _line = style.comment_line
@@ -80,6 +79,10 @@ M.generate_line = function(node_type, node, style, template, bufnr)
 			end
 		else
 			table.insert(docstring, string.format(_line, parsedValue))
+		end
+
+		if line.newline then
+			table.insert(docstring, style.comment_line)
 		end
 
 		::continue::

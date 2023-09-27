@@ -39,7 +39,6 @@ local builtin = {
 			local return_node = node
 					and get_named_child(node, { "type_identifier", "primitive_type", "placeholder_type_specifier" })
 				or nil
-			print(return_node and return_node:type())
 			return return_node and vim.treesitter.get_node_text(return_node, bufnr)
 		end,
 		["params"] = function(node, bufnr)

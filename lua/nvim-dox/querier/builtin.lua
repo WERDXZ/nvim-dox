@@ -41,8 +41,6 @@ local builtin = {
 			node = node:parent()
 		end
 
-		print(node and node:type() or "nil")
-
 		return node
 	end,
 	["struct"] = function(bufnr)

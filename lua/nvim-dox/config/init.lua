@@ -33,7 +33,7 @@ local M = {
 	max_iter = 5, -- max iteration for the query
 	register_keywords = true, -- register keywords to cmp 
 	short_license = true, -- it will output something like `This project is released under the ${LICENSE}.`
-	snippet_engine = "luasnip",
+	snippet_engine = nil,
 	user_field = {
 		author = function ()
 			return "${author}"

@@ -40,4 +40,16 @@ M.get_named_child = function(node, names)
 	return nil
 end
 
+---raise a warning
+---@param msg string
+M.warn = function (msg)
+	vim.notify(msg, vim.log.levels.WARN)
+end
+
+---raise an error
+---@param msg string
+M.error = function (msg)
+	vim.notify(msg, vim.log.levels.ERROR)
+end
+
 return M

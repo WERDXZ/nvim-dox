@@ -7,6 +7,8 @@ M.api.type = require("nvim-dox.type")
 
 M.setup = function (opts)
 	require("nvim-dox.excecutor").setup()
+	require("nvim-dox.config.setup")(opts)
+	print(vim.inspect(opts))
 end
 
 return M

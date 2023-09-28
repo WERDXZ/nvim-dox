@@ -22,7 +22,6 @@ local function setup(opts)
 	for key, value in pairs(opts.default_locations or {}) do
 		config.default_locations[key] = value
 	end
-	print(vim.inspect(opts))
 end
 
 return setup

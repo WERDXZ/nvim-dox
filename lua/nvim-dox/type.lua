@@ -1,7 +1,7 @@
 local M = {}
 
 ---@enum nvim_dox.type
-M.types = {
+local types = {
 	"file",
 	"class",
 	"struct",
@@ -10,7 +10,7 @@ M.types = {
 }
 
 ---@enum nvim_dox.location
-M.locations = {
+local locations = {
 	"above", -- above the current TS-node
 	"below", -- below the current TS-node
 	"top", -- top of the file
@@ -19,11 +19,21 @@ M.locations = {
 }
 
 M.extend_type = function(type)
-	table.insert(M.types, type)
+	table.insert(types, type)
 end
 
 M.extend_location = function(location)
-	table.insert(M.locations, location)
+	table.insert(locations, location)
 end
+
+-- add readOnly constraint
+setmetatable(M, {
+	__index = {
+		types = types,
+		locations = locations,
+	},
+	__newindex = require("nvim-dox.util").readOnly,
+})
+
 
 return M

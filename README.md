@@ -45,7 +45,6 @@ Contributions are always welcome! Feel free to open a PR or raise an issue. I ai
 
 | Feature                                          | Priority |
 | ------------------------------------------------ | -------- |
-| Organize API exposure                            | 1        |
 | Standardize function style                       | 1        |
 | Add documentation (`doc/vimdoc`)                 | 2        |
 | Register keyword completion sources              | 2        |

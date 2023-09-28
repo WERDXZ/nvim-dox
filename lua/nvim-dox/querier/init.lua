@@ -13,14 +13,21 @@ local M = {}
 ---@alias nvim_dox.querier_table table<nvim_dox.type, nvim_dox.querier>
 
 ---@type nvim_dox.querier_table
-M.queriers = require("nvim-dox.querier.builtin")
+local queriers = require("nvim-dox.querier.builtin")
 
 -- register a querier for a given type
 ---@param type string
 ---@param querier nvim_dox.querier
 M.register = function(type, querier)
-	M.queriers = M.queriers or {}
-	M.queriers[type] = querier
+	queriers[type] = querier
 end
+
+-- add readOnly constraint
+setmetatable(M, {
+	__index = {
+		queriers = queriers,
+	},
+	__newindex = require("nvim-dox.util").readOnly,
+})
 
 return M

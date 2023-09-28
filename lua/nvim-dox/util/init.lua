@@ -52,4 +52,9 @@ M.error = function (msg)
 	vim.notify(msg, vim.log.levels.ERROR)
 end
 
+M.readOnly=function(_, key)
+	error("Attempt to modify read-only field " .. key, 2)
+end
+
+
 return M

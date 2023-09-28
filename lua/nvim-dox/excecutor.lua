@@ -13,7 +13,7 @@ local querier = require("nvim-dox.querier")
 local create_cmd = vim.api.nvim_create_user_command
 local node_type = require("nvim-dox.type")
 local completion = vim.list_extend({ "generate" }, node_type.types)
-local generate = require("nvim-dox.docstring").generate
+local generate = require("nvim-dox.generator").generate
 
 M.setup = function()
 	create_cmd("Dox", function(opts)

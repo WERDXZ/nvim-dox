@@ -46,13 +46,13 @@ Contributions are always welcome! Feel free to open a PR or raise an issue. I ai
 | Feature                                          | Priority |
 | ------------------------------------------------ | -------- |
 | Add documentation (`doc/vimdoc`)                 | 1        |
-| Register keyword completion sources              | 1        |
 | Support syntax highlighting for keywords         | 1        |
 | Implement `Checkhealth` for troubleshooting      | 1        |
 | Integrate with other snippet engines             | 1        |
 | Develop `Dox generate` for document generation   | 2        |
 | Support other document engines                   | 2        |
-| Incorporate namespace/inheritance support (major change) | 4 |
+| Incorporate namespace/inheritance support (major change) | 3 |
+| Other completion sources                         | 3        |
 
 ## Design
 

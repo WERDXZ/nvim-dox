@@ -1,5 +1,6 @@
 ---@type nvim_dox.config.source
 local M = {
+	name = "doxygen",
 	docstring = require("nvim-dox.docstring.doxygen"),
 	style_config = {
 		comment_prefix = "",

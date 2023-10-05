@@ -1,6 +1,7 @@
 local license = require("nvim-dox.util.license")
 
 ---@class nvim_dox.config.source
+---@field name string
 ---@field docstring nvim_dox.docstring.template
 ---@field style_config nvim_dox.config.style_config
 ---@field style "block"|"line"|"banner"
@@ -22,6 +23,7 @@ local license = require("nvim-dox.util.license")
 ---@field register_keywords boolean
 ---@field short_license boolean
 ---@field snippet_engine string|nil
+---@field complete_engine string|nil
 ---@field user_field table<string, fun():string>
 ---@field default_locations table<nvim_dox.type, nvim_dox.location|table<integer>>
 
@@ -34,6 +36,7 @@ local M = {
 	register_keywords = true, -- register keywords to cmp 
 	short_license = true, -- it will output something like `This project is released under the ${LICENSE}.`
 	snippet_engine = nil,
+	complete_engine = nil,
 	user_field = {
 		author = function ()
 			return "${author}"

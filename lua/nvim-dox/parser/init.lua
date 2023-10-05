@@ -7,7 +7,7 @@ local M = {}
 
 ---@alias nvim_dox.parser.item (fun(node:TSNode|nil, bufnr: number):table<string>|string|nil) | string | table<string>
 ---@alias nvim_dox.parser table<string,nvim_dox.parser.item>
----@type table<string, nvim_dox.parser>
+---@type table<nvim_dox.type, nvim_dox.parser>
 local parsers = require("nvim-dox.parser.builtin")
 
 ---register a parser for a node type

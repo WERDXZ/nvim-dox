@@ -13,6 +13,7 @@ local function setup(opts)
 	config.register_keywords = opts.register_keywords and true
 	config.short_license = opts.short_license and true
 	config.snippet_engine = opts.snippet_engine
+	config.complete_engine = opts.complete_engine
 
 	for key, value in ipairs(opts.user_field or {}) do
 		if type(value) == "function" then

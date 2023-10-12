@@ -46,7 +46,6 @@ Contributions are always welcome! Feel free to open a PR or raise an issue. I ai
 | Feature                                          | Priority |
 | ------------------------------------------------ | -------- |
 | Add documentation (`doc/vimdoc`)                 | 1        |
-| Support syntax highlighting for keywords         | 1        |
 | Implement `Checkhealth` for troubleshooting      | 1        |
 | Integrate with other snippet engines             | 1        |
 | Develop `Dox generate` for document generation   | 2        |

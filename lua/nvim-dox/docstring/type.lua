@@ -2,7 +2,7 @@
 ---@field [1] string|boolean
 ---@field keyword string|nil
 ---@field value string
----@field newline boolean|nil
+---@field newline "before"|"after"|"both"|nil
 
 ---@alias nvim_dox.docstring.template nvim_dox.docstring.template.item[]
 

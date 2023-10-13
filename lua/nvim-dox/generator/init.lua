@@ -72,6 +72,10 @@ M.generate_line = function(node_type, node, style, template, bufnr)
 			end
 		end
 
+		if line.newline == "both" or line.newline == "before" then
+			table.insert(docstring, style.comment_line)
+		end
+
 		-- Check if the parsed value is a table and handle it
 		if type(parsedValue) == "table" then
 			for _, value in pairs(parsedValue) do
@@ -81,7 +85,7 @@ M.generate_line = function(node_type, node, style, template, bufnr)
 			table.insert(docstring, string.format(_line, parsedValue))
 		end
 
-		if line.newline then
+		if line.newline == "both" or line.newline == "after" then
 			table.insert(docstring, style.comment_line)
 		end
 
